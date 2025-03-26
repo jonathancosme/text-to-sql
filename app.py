@@ -207,30 +207,6 @@ def main():
             with st.chat_message(role):
                 st.markdown(msg.content)
 
-                # if msg.metadata:
-                #     # If there's a DataFrame in metadata, display it
-                #     df = msg.metadata.get("df_result")
-                #     if isinstance(df, pd.DataFrame):
-                #         st.dataframe(df)
-
-                #     # If there's a stored plot spec, try re-render in an expander
-                #     plot_spec = msg.metadata.get("plot")
-                #     if isinstance(plot_spec, dict) and df is not None:
-                #         with st.expander("📊 Previous Chart", expanded=False):
-                #             try:
-                #                 chart_type = plot_spec["chart_type"]
-                #                 x_col = plot_spec["x"]
-                #                 y_col = plot_spec["y"]
-                #                 if chart_type == "bar":
-                #                     st.bar_chart(df, x=x_col, y=y_col)
-                #                 elif chart_type == "line":
-                #                     st.line_chart(df, x=x_col, y=y_col)
-                #                 elif chart_type == "scatter":
-                #                     st.scatter_chart(df, x=x_col, y=y_col)
-                #             except Exception as e:
-                #                 st.error(f"❌ Failed to plot chart: {e}")
-                        # Only AI messages can have metadata
-
                 if isinstance(msg, AIMessage) and hasattr(msg, "metadata") and msg.metadata:
                     df = msg.metadata.get("df_result")
                     plot_spec = msg.metadata.get("plot")
@@ -449,7 +425,7 @@ here is the user input: {user_input}
                 # Save in conversation
                 ai_msg = AIMessage(content=response_text)
                 st.session_state.messages.append(ai_msg)
-                memory.save_context({"input": user_input}, {"output": f"{response_text} {sql_df}"})
+                memory.save_context({"input": user_input}, {"output": response_text})
 
     else:
         st.warning("🔑 Please enter your OpenAI API key in the sidebar to start.")

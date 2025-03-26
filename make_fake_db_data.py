@@ -33,7 +33,7 @@ def random_date_yyyymmdd(start_year=1990, end_year=2025):
     delta = end - start
     random_days = random.randrange(delta.days)
     random_date = start + datetime.timedelta(days=random_days)
-    return random_date.strftime("%Y%m%d")
+    return random_date.strftime("%Y-%m-%d")
 
 def random_date_yymm(start_year=1990, end_year=2025):
     """Generate a random date in MMYYYY format (for Assessment Administration Date)."""
@@ -43,7 +43,7 @@ def random_date_yymm(start_year=1990, end_year=2025):
     delta = end - start
     random_days = random.randrange(delta.days)
     random_date = start + datetime.timedelta(days=random_days)
-    return random_date.strftime("%m%Y")
+    return random_date.strftime("%Y-%m")
 
 def random_timestamp_yyyymmddhhmmssSSS(start_year=2010, end_year=2025):
     """Generate a random timestamp in 'YYYYMMDDhhmmssSSS' format."""
@@ -54,7 +54,7 @@ def random_timestamp_yyyymmddhhmmssSSS(start_year=2010, end_year=2025):
     random_dt = start + datetime.timedelta(seconds=random_seconds)
     # For microseconds, we only keep 3 digits to mimic 'SSS'
     ms = f"{int(random_dt.microsecond/1000):03d}"
-    return random_dt.strftime(f"%Y%m%d%H%M%S") + ms
+    return random_dt.strftime(f"%Y-%m-%d %H:%M:%S") + ms
 
 def random_state_code():
     """Return a random (valid) US state code (2 letters)."""
@@ -247,9 +247,9 @@ def generate_qualifying_moves_table_data(num_rows, student_ids):
         eed_dt_str = qad[:4] + qad[4:6] + qad[6:]
         # We can do a smaller random offset
         random_expiry = random.randint(0, 365*3)
-        start_dt = datetime.datetime.strptime(qad, "%Y%m%d")
+        start_dt = datetime.datetime.strptime(qad, "%Y-%m-%d")
         exp_dt = start_dt + datetime.timedelta(days=random_expiry)
-        eed_dt_str = exp_dt.strftime("%Y%m%d")
+        eed_dt_str = exp_dt.strftime("%Y-%m-%d")
 
         row = {
             "qual_moves_id": i,
