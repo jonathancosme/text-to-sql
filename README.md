@@ -13,6 +13,10 @@ This app was originally made with a fake Education dataset, but any dataset will
 - Can plot bar, line, and scatter plots
 
 ## run app
++ navigate to text-to-sql directory
+```bash
+cd text-to-sql
+```
 + activate environment
 ```bash
 conda activate text-to-sql
@@ -36,6 +40,14 @@ bash stop_db_server.sh
 ```
 
 ## first time setup
++ clone repo
+```bash
+git clone https://github.com/jonathancosme/text-to-sql.git
+```
++ navigate to text-to-sql directory
+```bash
+cd text-to-sql
+```
 + create conda environment 
 ```bash
 mamba env create --file env.yml
