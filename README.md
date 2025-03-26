@@ -1,6 +1,12 @@
 # Text-to-SQL chat app
 This app was originally made with a fake Education dataset, but any dataset will work.
 
+## **NOTE:**
++ This tool is inteded to be a tool for **local** environments, in order to easily and quickly demonstrate the power of text-to-SQL agentic GenAI.
++ It is **NOT indended for production environments**
++ There are **no GenAI guardrails
++ There are no SQL insert/update prevention guardrails
+
 ## features
 - will return SQL query text
 - will run SQL query text, and return the results

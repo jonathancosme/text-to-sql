@@ -1,1 +1,1 @@
-MSIX Text-to-SQL Agentic AI Chatbot
+MSIX Text-to-SQL Agentic GenAI Chatbot
