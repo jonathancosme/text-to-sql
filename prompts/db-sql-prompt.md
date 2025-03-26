@@ -5,7 +5,7 @@ If you need more information, feel free to ask the user before proceeding.
 The SQL format you will use is PostgreSQL.
 keep in mind that some columns/tables have upper-case letters, so be sure to write a query that will work with that.
 
-Here is description of the database:
+Here is description of the database:  
 **MSIX Data Tables and Columns Reference**
 
 This document describes the structure, columns, data types, and relationships (primary and foreign keys) among the MSIX data tables.
@@ -33,7 +33,7 @@ The `Header` table contains metadata about the file submission from a state to M
 
 **Table: Student**
 
-**Description:**
+**Description:**  
 The `Student` table contains one record per student submission from a reporting state. Each record captures key identifiers used to track student data across systems including MSIX and State-specific systems.
 This table stores identifiers for migratory children, with fields that uniquely identify a student within the MSIX system, the reporting state, and the file submission. It includes both system-generated and state-assigned identifiers, as well as action codes indicating how the student record should be processed (insert, update, or delete).
 
@@ -53,7 +53,7 @@ This table stores identifiers for migratory children, with fields that uniquely 
 
 **Table: Alternate_State_Student_IDs**
 
-**Description:**
+**Description:**  
 This table contains alternate identifiers for students as maintained by different state systems. Each row represents a unique alternate ID for a student and includes metadata indicating the type and format of the ID.
 Stores alternate student IDs from state educational systems. These identifiers may differ from the primary State Student Identifier but are used to uniquely identify students across systems.
 
@@ -172,7 +172,7 @@ This table contains records of a student’s enrollment in educational instituti
 
 **Table: Assessments**
 
-**Description**
+**Description**  
 The `Course_History` table contains information about the academic courses a student has completed or attempted. Each record represents a course entry for a student and includes details such as course name, subject area, academic years, credits, grades, and more.
 
 **Columns**
@@ -198,7 +198,7 @@ The `Course_History` table contains information about the academic courses a stu
 
 **Table: Assessments**
 
-**Description**
+**Description**  
 Contains records of academic or standardized assessments administered to students. Each record captures information about the test, subject area, type, results, and interpretation.
 
 **Columns**
