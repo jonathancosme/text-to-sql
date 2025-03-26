@@ -1,0 +1,8 @@
+db_config.env
+logfile
+scratch.ipynb
+table_csvs/*
+pgdata/*
+
+# exceptions
+!table_csvs/.gitkeep
