@@ -3,6 +3,7 @@ import csv
 import random
 import datetime
 from faker import Faker
+from tqdm import tqdm
 
 fake = Faker()
 
@@ -14,13 +15,16 @@ os.makedirs(output_dir, exist_ok=True)
 # 1) Define how many rows of data to generate per table
 ##################################################
 NUM_HEADER_ROWS = 3
-NUM_STUDENT_ROWS = 2000
-NUM_ALTERNATE_IDS_ROWS = 500
-NUM_DEMOGRAPHICS_ROWS = 2000
-NUM_QUALIFYING_MOVES_ROWS = 1500
-NUM_ENROLLMENTS_ROWS = 1000
-NUM_COURSE_HISTORY_ROWS = 8000
-NUM_ASSESSMENTS_ROWS = 7000
+NUM_STUDENT_ROWS = 10000
+NUM_DEMOGRAPHICS_ROWS = 10000
+
+NUM_ALTERNATE_IDS_ROWS = 5000
+NUM_QUALIFYING_MOVES_ROWS = 5000
+
+NUM_ENROLLMENTS_ROWS = 120000
+
+NUM_COURSE_HISTORY_ROWS = 960000
+NUM_ASSESSMENTS_ROWS = 960000
 
 ##################################################
 # 2) Utility Generators
@@ -109,7 +113,7 @@ def generate_header_table_data(num_rows):
     We'll produce several example rows with random data.
     """
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         row = {
             "header_id": i,  # PK
             "Submitting State": random_state_code(),
@@ -140,7 +144,7 @@ def generate_student_table_data(num_rows):
       - ...
     """
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         # 7-digit ID up to 40000
         stud_rec_id = str(i).zfill(7)  # "0000001" etc.
         # MSIX ID: 12-digit numeric
@@ -174,7 +178,7 @@ def generate_alternate_ids_table_data(num_rows, student_ids):
     'Alternate State Record ID' is up to 3 digits (001 to 999).
     """
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         alt_record_id = str(random.randint(1, 999)).zfill(3)
         row = {
             "alt_state_id_pk": i,  # PK
@@ -197,7 +201,7 @@ def generate_demographics_table_data(num_rows, student_ids):
     We'll reference a random student_id_fk
     """
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         rec_id = str(random.randint(1, 999)).zfill(3)
         row = {
             "demographics_id": i,
@@ -229,7 +233,7 @@ def generate_demographics_table_data(num_rows, student_ids):
 #######################
 def generate_qualifying_moves_table_data(num_rows, student_ids):
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         rec_id = str(random.randint(1, 999)).zfill(3)
         from_city = fake.city()
         from_state = random_state_code()
@@ -271,7 +275,7 @@ def generate_qualifying_moves_table_data(num_rows, student_ids):
 #######################
 def generate_enrollments_table_data(num_rows, student_ids):
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         rec_id = str(random.randint(1, 999)).zfill(3)
         enroll_date = random_date_yyyymmdd(start_year=2015, end_year=2025)
         # possible enrollment types
@@ -330,7 +334,7 @@ def generate_enrollments_table_data(num_rows, student_ids):
 #######################
 def generate_course_history_table_data(num_rows, student_ids):
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         rec_id = str(random.randint(1, 999)).zfill(3)
         begin_year = random.randint(2015, 2023)
         end_year = begin_year if random.random() < 0.7 else begin_year + 1
@@ -359,7 +363,7 @@ def generate_course_history_table_data(num_rows, student_ids):
 #######################
 def generate_assessments_table_data(num_rows, student_ids):
     data = []
-    for i in range(1, num_rows + 1):
+    for i in tqdm(range(1, num_rows + 1)):
         rec_id = str(random.randint(1, 999)).zfill(3)
         assess_type = random_assessment_type()
         row = {

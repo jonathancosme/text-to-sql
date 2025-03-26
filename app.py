@@ -159,7 +159,7 @@ class StreamHandler(BaseCallbackHandler):
 # --------------------------- #
 #  CLASSIFICATION LOGIC
 # --------------------------- #
-def classify_user_request(user_input: str, classification_llm: ChatOpenAI) -> str:
+def classify_user_request(user_input: str, chat_history: str, classification_llm: ChatOpenAI) -> str:
     """
     Decide if the user wants:
       - "SQL"  => run a new query
@@ -173,7 +173,11 @@ You are a text classifier that must categorize the user's request as one of thes
 2) PLOT - The user wants to plot or visualize the last known data.
 3) CHAT - The user is simply chatting or clarifying, with no need for SQL or plotting.
 
-User's request: {user_input}
+Chat history summary:  
+{chat_history}
+
+User's request: 
+{user_input}
 
 Return ONLY one word, either 'SQL', 'PLOT', or 'CHAT'.
 """
@@ -196,7 +200,7 @@ def main():
         if st.session_state.memory is None:
             # Main LLM for conversation
             llm = ChatOpenAI(
-                # temperature=0.7,
+                temperature=0.0,
                 openai_api_key=api_key,
                 model_name="gpt-4o",
                 streaming=True
@@ -211,7 +215,7 @@ def main():
 
         # We'll also define a classification LLM (non-streaming) for short text classification
         classification_llm = ChatOpenAI(
-            # temperature=0.0,
+            temperature=0.0,
             openai_api_key=api_key,
             model_name="gpt-4o",
             streaming=False
@@ -238,7 +242,11 @@ def main():
         for msg in st.session_state.messages:
             role = "user" if isinstance(msg, HumanMessage) else "assistant"
             with st.chat_message(role):
-                st.markdown(msg.content)
+                if ('```sql' in msg.content):
+                    with st.expander("SQL code response", expanded=False):
+                        st.markdown(msg.content)
+                else:
+                    st.markdown(msg.content)
 
                 if isinstance(msg, AIMessage) and hasattr(msg, "metadata") and msg.metadata:
                     df = msg.metadata.get("df_result")
@@ -269,7 +277,7 @@ def main():
 
         if user_input:
             # 0) Decide action (SQL, PLOT, or CHAT)
-            action = classify_user_request(user_input, classification_llm)
+            
 
             # 1) Add user's message to conversation
             # Build or load prompt template:
@@ -287,6 +295,9 @@ Assistant:"""
                 conversation_summary=conversation_summary or "NONE",
                 user_input=user_input
             )
+
+            action = classify_user_request(user_input, conversation_summary, classification_llm)
+
             # If the user wants to see the entire "formatted prompt" in the chat:
             display_user_content = formatted_prompt if display_formatted_prompt_in_chat else user_input
 
@@ -297,8 +308,10 @@ Assistant:"""
             # 2) Branch logic
             if action == "SQL":
                 # (A) We run multi-attempt SQL generation
+                
                 with st.chat_message("assistant"):
-                    response_container = st.empty()
+                    with st.expander("SQL code Response", expanded=False):
+                        response_container = st.empty()
 
                 stream_handler = StreamHandler(response_container)
                 llm.callbacks = [stream_handler]
@@ -326,6 +339,7 @@ Assistant:"""
                             break
                         except Exception as e:
                             error_msg = (
+                                f"here is the original user prompt:\n{response_text}\n"
                                 f"The SQL query caused an error:\n```\n{str(e)}\n```\n"
                                 f"Please provide a corrected SQL query."
                             )
