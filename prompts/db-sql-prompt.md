@@ -10,7 +10,7 @@ Here is description of the database:
 
 This document describes the structure, columns, data types, and relationships (primary and foreign keys) among the MSIX data tables.
 
-## Table: Header
+**Table**: Header
 **Description**: Contains metadata describing the file submission.
 
 | Column Name              | Description                                                | Data Type          | Keys |
@@ -25,7 +25,7 @@ This document describes the structure, columns, data types, and relationships (p
 
 ---
 
-## Table: Student
+**Table**: Student
 **Description**: Contains core identifying information for students.
 
 | Column Name                     | Description                                                     | Data Type   | Keys |
@@ -40,7 +40,7 @@ This document describes the structure, columns, data types, and relationships (p
 
 ---
 
-## Table: Alternate_State_Student_IDs
+**Table**: Alternate_State_Student_IDs
 **Description**: Contains alternate IDs for students.
 
 | Column Name                     | Description                                                 | Data Type  | Keys        |
@@ -53,7 +53,7 @@ This document describes the structure, columns, data types, and relationships (p
 
 ---
 
-## Table: Demographics
+**Table**: Demographics
 **Description**: Student demographic information.
 
 | Column Name                | Description                                     | Data Type | Keys        |
@@ -81,7 +81,7 @@ This document describes the structure, columns, data types, and relationships (p
 
 ---
 
-## Table: Qualifying_Moves
+**Table**: Qualifying_Moves
 **Description**: Records qualifying moves impacting student eligibility.
 
 | Column Name                   | Description                                           | Data Type | Keys         |
@@ -99,7 +99,7 @@ This document describes the structure, columns, data types, and relationships (p
 
 ---
 
-## Table: Enrollments
+**Table**: Enrollments
 **Description**: Enrollment data for students.
 
 | Column Name                      | Description                                                                                                   | Data Type     | Keys          |
@@ -142,7 +142,7 @@ This document describes the structure, columns, data types, and relationships (p
 
 ---
 
-## Table: Course_History
+**Table**: Course_History
 **Description**: Academic course history for students.
 
 | Column Name               | Description                             | Data Type  | Keys          |
@@ -157,7 +157,7 @@ This document describes the structure, columns, data types, and relationships (p
 
 ---
 
-## Table: Assessments
+**Table**: Assessments
 **Description**: Academic assessment records for students.
 
 | Column Name              | Description                                 | Data Type  | Keys         |

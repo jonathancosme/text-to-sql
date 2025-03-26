@@ -3,6 +3,10 @@ logfile
 scratch.ipynb
 table_csvs/*
 pgdata/*
+# customizations/**/*
+# .streamlit/**/*
 
 # exceptions
 !table_csvs/.gitkeep
+!customizations/**/.gitkeep
+!.streamlit/**/.gitkeep

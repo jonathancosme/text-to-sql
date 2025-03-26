@@ -74,3 +74,8 @@ python populate_db.py
 + make a copy the prompt_template.md file and rename it to whatever you'd like. 
     + update your template with your database information (see db-sql-prompt.md for example)
 + continue the run app steps
+
+## UI Customization
++ add a favicon.png and logo.png file to ./customizations/logos (app favicon and logo)
++ update ./customizations/title.txt (app title)
++ update ./.streamlit/config.toml (app colors)

@@ -3,28 +3,62 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, AIMessage
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.callbacks.base import BaseCallbackHandler
-
+from langchain.utilities import SQLDatabase
+import pandas as pd
+from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
 import glob
 import os
 import re
 import json
+from pathlib import Path
+import shutil
+import toml
 
-import pandas as pd
-from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
+# --- Paths ---
+CUSTOM_DIR = Path("customizations")
+LOGO_DIR = CUSTOM_DIR / "logos"
+TITLE_FILE = CUSTOM_DIR / "title.txt"
+THEME_FILE = Path("custom_theme.toml")
+STREAMLIT_CONFIG = Path(".streamlit/config.toml")
+STREAMLIT_CONFIG.parent.mkdir(exist_ok=True)
 
-from langchain.utilities import SQLDatabase
-
+# --- Load title ---
+default_title = "Text-to-SQL Agentic AI Chatbot"
+if TITLE_FILE.exists():
+    page_title = TITLE_FILE.read_text(encoding="utf-8").strip()
+else:
+    page_title = default_title
 
 # --------------------------- #
 #     STREAMLIT CONFIG
 # --------------------------- #
-st.set_page_config(page_title="🧠 GPT-4o Chatbot", layout="centered")
+
+# --- Handle favicon ---
+favicon_path = LOGO_DIR / "favicon.png"
+if favicon_path.exists():
+    st.set_page_config(page_title=page_title, page_icon=str(favicon_path), layout="wide")
+    st.logo(str(favicon_path), size='large')
+else:
+    st.set_page_config(page_title=page_title, page_icon="✨", layout="wide")
+
+# --- Show logo if exists ---
+logo_path = LOGO_DIR / "logo.png"
+if logo_path.exists():
+    st.image(str(logo_path), width=500)
+
+# --- Page Title Heading ---
+st.title(page_title)
+
+# --- Apply custom theme if present ---
+if THEME_FILE.exists():
+    theme_dict = toml.load(THEME_FILE)
+    toml.dump(theme_dict, STREAMLIT_CONFIG)
 
 # --------------------------- #
 #     SIDEBAR
 # --------------------------- #
-st.sidebar.title("⚙️ Settings")
+st.sidebar.title("Settings")
 api_key = st.sidebar.text_input("🔑 OpenAI API key", type="password")
 
 if st.sidebar.button("🧹 Clear Conversation"):
@@ -34,8 +68,8 @@ if st.sidebar.button("🧹 Clear Conversation"):
 # Prompt templates in ./prompts/*.md (optional)
 prompt_files = glob.glob("./prompts/*.md")
 prompt_options = ["None"] + [os.path.basename(f) for f in prompt_files]
-selected_prompt = st.sidebar.selectbox("📑 Select Prompt Template", prompt_options)
-display_formatted_prompt_in_chat = st.sidebar.checkbox("📝 Display prompt in chat", value=False)
+selected_prompt = st.sidebar.selectbox("Select Prompt Template", prompt_options)
+display_formatted_prompt_in_chat = st.sidebar.checkbox("Display prompt in chat", value=False)
 
 # --------------------------- #
 #   SESSION STATE INIT
@@ -135,7 +169,7 @@ def classify_user_request(user_input: str, classification_llm: ChatOpenAI) -> st
     """
     classification_prompt = f"""
 You are a text classifier that must categorize the user's request as one of these three categories only:
-1) SQL  - The user wants a new SQL query or fresh data from the DB.
+1) SQL  - The user wants a new SQL query or fresh data from the DB or has SQL query they want to run.
 2) PLOT - The user wants to plot or visualize the last known data.
 3) CHAT - The user is simply chatting or clarifying, with no need for SQL or plotting.
 
@@ -157,7 +191,6 @@ Return ONLY one word, either 'SQL', 'PLOT', or 'CHAT'.
 # --------------------------- #
 def main():
     if api_key:
-        st.title("🧠 GPT-4o Chatbot (SQL + Plot)")
 
         # 1) Initialize LLM + Memory
         if st.session_state.memory is None:
@@ -409,7 +442,7 @@ here is the user input: {user_input}
                             st.warning(final_plot_text)
                             ai_msg = AIMessage(content=final_plot_text)
                             st.session_state.messages.append(ai_msg)
-                            memory.save_context({"input": user_input}, {"output": f"{final_plot_text} {sql_df}"})
+                            memory.save_context({"input": user_input}, {"output": final_plot_text})
 
             else:
                 # (C) Normal CHAT, no SQL or plotting
